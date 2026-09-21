@@ -50,23 +50,8 @@
     transition:opacity .5s ease, visibility .5s ease;
   }
   #splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
-  .engine-rig{display:flex;flex-direction:column;align-items:center;margin-bottom:18px;}
-  .cylinder-bank{display:flex;gap:10px;background:var(--ink);padding:8px 10px 0;border-radius:6px 6px 0 0;}
-  .cylinder{
-    width:28px;height:72px;background:var(--surface);border-radius:3px 3px 0 0;
-    position:relative;overflow:hidden;
-  }
-  .piston{
-    position:absolute;left:3px;width:22px;height:24px;background:var(--yellow-deep);
-    border-radius:2px;top:2px;
-    animation:pistonMove 0.7s cubic-bezier(.45,0,.55,1) infinite;
-  }
-  .piston::after{content:'';position:absolute;left:50%;top:100%;width:2px;height:14px;background:var(--ink-faint);transform:translateX(-50%);}
-  .piston.offset{animation-delay:0.35s;}
-  @keyframes pistonMove{
-    0%{top:2px;} 50%{top:44px;} 100%{top:2px;}
-  }
-  .crankcase{width:100%;height:14px;background:var(--ink);border-radius:0 0 6px 6px;}
+  .engine-rig{margin-bottom:18px;}
+  #engineSvg{width:230px;height:auto;display:block;}
   #splash .caption{font-size:12px;color:var(--ink-faint);margin-bottom:24px;}
   #splash-fact{max-width:420px;font-size:16px;line-height:1.6;color:var(--ink);min-height:78px;}
   #splash-skip{
@@ -262,13 +247,16 @@
 
 <div id="splash">
   <div class="engine-rig">
-    <div class="cylinder-bank">
-      <div class="cylinder"><div class="piston"></div></div>
-      <div class="cylinder"><div class="piston offset"></div></div>
-      <div class="cylinder"><div class="piston offset"></div></div>
-      <div class="cylinder"><div class="piston"></div></div>
-    </div>
-    <div class="crankcase"></div>
+    <svg id="engineSvg" viewBox="0 0 260 190">
+      <rect x="10" y="10" width="240" height="150" rx="6" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+      <line x1="10" y1="118" x2="250" y2="118" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <g id="cylTubes"></g>
+      <g id="webs"></g>
+      <g id="rods"></g>
+      <g id="pins"></g>
+      <g id="journals"></g>
+      <g id="pistons"></g>
+    </svg>
   </div>
   <div class="caption">Firing up the archive</div>
   <div id="splash-fact"></div>
@@ -603,7 +591,35 @@ const CARS = [
   { id:'elevate', make:'Honda', model:'Elevate', generation:'Current generation', years:'2023–present', category:'suv', status:'current', segment:'10–15L', verified:true,
     priceLabel:'New (ex-showroom): ₹11.60L–16.93L', engine:'1498cc petrol', power:'119 bhp / 145 Nm', mileage:'15.31 km/l (claimed)', transmission:'6MT / CVT', seating:'5',
     paints:[{name:'Platinum White Pearl',hex:'#E7E4D8'},{name:'Meteoroid Grey',hex:'#54595E'},{name:'Obsidian Blue Pearl',hex:'#2C4A6B'}],
-    facts:['Honda\'s first dedicated compact SUV for the Indian market, built on a shortened City platform.','Offered only with a petrol engine — no diesel or hybrid option as of 2026.'] }
+    facts:['Honda\'s first dedicated compact SUV for the Indian market, built on a shortened City platform.','Offered only with a petrol engine — no diesel or hybrid option as of 2026.'] },
+  { id:'verna', make:'Hyundai', model:'Verna', generation:'Facelift (2026)', years:'2023–present', category:'sedan', status:'current', segment:'10–15L', verified:true,
+    priceLabel:'New (ex-showroom): ₹10.99L–18.26L', engine:'1497cc petrol / 1497cc turbo-petrol options', power:'115 bhp (NA) / 160 bhp (turbo)', mileage:'18–20 km/l (claimed, varies by trim)', transmission:'6MT / IVT / 7-speed DCT', seating:'5',
+    paints:[{name:'Atlas White',hex:'#E7E4D8'},{name:'Fiery Red',hex:'#9C2B22'},{name:'Titan Grey',hex:'#54595E'}],
+    facts:['The 2026 facelift added \'Boss mode\', 360-degree cameras and 7 airbags as standard across the range.','Has the largest boot in its segment at 528 litres.'] },
+  { id:'exter', make:'Hyundai', model:'Exter', generation:'Facelift (2026)', years:'2023–present', category:'suv', status:'current', segment:'5–10L', verified:true,
+    priceLabel:'New (ex-showroom): ₹5.81L–9.61L', engine:'1197cc petrol, factory CNG option available', power:'83 bhp (petrol) / 69 bhp (CNG)', mileage:'ARAI-rated; varies by trim', transmission:'5MT / 5-speed AMT', seating:'5',
+    paints:[{name:'Atlas White',hex:'#E7E4D8'},{name:'Cosmic Blue',hex:'#2C5270'},{name:'Ranger Khaki',hex:'#8A7A4E'}],
+    facts:['Positioned as a micro-SUV rival to the Maruti Ignis, with segment-first features like a built-in dashcam.','Received a March 2026 facelift with styling revisions and new colours on top of its original 2023 launch.'] },
+  { id:'tiago', make:'Tata', model:'Tiago', generation:'Facelift', years:'2016–present', category:'hatchback', status:'current', segment:'Under 5L', verified:true,
+    priceLabel:'New (ex-showroom): ₹4.57L–7.82L', engine:'1199cc petrol, factory CNG option available', power:'85 bhp / 113 Nm', mileage:'19.01 km/l (claimed)', transmission:'5MT / 5-speed AMT', seating:'5',
+    paints:[{name:'Daytona Grey',hex:'#54595E'},{name:'Tornado Blue',hex:'#2C5270'},{name:'Flame Red',hex:'#9C2B22'}],
+    facts:['Tata\'s entry-level hatchback, also sold as a fully electric Tiago EV using the same body.','One of the cheapest factory-fitted CNG hatchbacks on sale in India.'] },
+  { id:'xuv3xo', make:'Mahindra', model:'XUV 3XO', generation:'Current generation', years:'2024–present', category:'suv', status:'current', segment:'10–15L', verified:true,
+    priceLabel:'New (ex-showroom): ₹7.79L–15.04L', engine:'1197cc turbo-petrol / 1497cc turbo-diesel options', power:'110–130 bhp (petrol) / 115–130 bhp (diesel)', mileage:'18.89–20.6 km/l (claimed range)', transmission:'6MT / 6AT / AMT (diesel)', seating:'5',
+    paints:[{name:'Citrine Yellow',hex:'#E7B93A'},{name:'Deep Forest',hex:'#2F4A38'},{name:'Everest White',hex:'#EDEDE6'}],
+    facts:['Replaced the XUV300 nameplate in 2024 with updated styling, C-shaped LED lighting and a broader engine lineup.','Scored a 5-star Global NCAP safety rating.'] },
+  { id:'grandvitara', make:'Maruti Suzuki', model:'Grand Vitara', generation:'Current generation', years:'2022–present', category:'suv', status:'current', segment:'10–15L', verified:true,
+    priceLabel:'New (ex-showroom): ₹10.77L–19.66L', engine:'1462cc petrol (mild-hybrid) / 1490cc strong-hybrid options', power:'102–116 bhp', mileage:'21.11–27.97 km/l (claimed, hybrid variants highest)', transmission:'5MT / 6AT / e-CVT (hybrid) · AllGrip 4WD on select trims', seating:'5',
+    paints:[{name:'Splendid Silver',hex:'#B9BEC2'},{name:'Nexa Blue',hex:'#254A73'},{name:'Opulent Red',hex:'#9C2B22'}],
+    facts:['Shares its strong-hybrid powertrain with the Toyota Urban Cruiser Hyryder — both are built on the same platform.','One of the few SUVs under ₹20 lakh in India offering a proper 4WD option (AllGrip).'] },
+  { id:'city2', make:'Honda', model:'City', generation:'5th generation (facelift)', years:'2020–present', category:'sedan', status:'current', segment:'10–15L', verified:true,
+    priceLabel:'New (ex-showroom): ₹12.04L onwards (petrol); hybrid e:HEV variants priced higher', engine:'1498cc petrol / 1498cc petrol-hybrid (e:HEV) options', power:'119 bhp (petrol); hybrid output varies', mileage:'17.77 km/l (petrol, claimed) · up to 27.26 km/l (hybrid, claimed)', transmission:'6MT / CVT (petrol) · e-CVT (hybrid)', seating:'5',
+    paints:[{name:'Platinum White Pearl',hex:'#E7E4D8'},{name:'Meteoroid Grey',hex:'#54595E'},{name:'Radiant Red',hex:'#9C2B22'}],
+    facts:['The first Honda City generation in India to offer a full hybrid (e:HEV) powertrain alongside the standard petrol.','Has been sold in India continuously since 1998, making it one of the longest-running sedan nameplates in the market.'] },
+  { id:'amaze2', make:'Honda', model:'Amaze', generation:'3rd generation', years:'2024–present', category:'sedan', status:'current', segment:'5–10L', verified:true,
+    priceLabel:'New (ex-showroom): ₹7.65L–10.90L', engine:'1199cc petrol', power:'89 bhp / 110 Nm', mileage:'18.65 km/l (MT) / 19.46 km/l (CVT), ARAI claimed', transmission:'5MT / CVT', seating:'5',
+    paints:[{name:'Meteoroid Grey',hex:'#54595E'},{name:'Radiant Red',hex:'#9C2B22'},{name:'Platinum White Pearl',hex:'#E7E4D8'}],
+    facts:['The first Amaze generation to offer Honda\'s ADAS suite — adaptive cruise control and lane keep assist — at this price point.','Does not offer a CNG variant, unlike most of its direct rivals.'] }
 ];
 
 const FACTS = [
@@ -682,12 +698,81 @@ function silhouette(category, fillHex){
 }
 
 /* ================= SPLASH ================= */
+/* ================= ENGINE ANIMATION (real slider-crank kinematics) ================= */
+const ENGINE_CX = [42, 102, 162, 222];
+const ENGINE_PHASE = [0, Math.PI, Math.PI, 0]; // inline-4: cylinders 1&4 paired, 2&3 paired opposite
+const ENGINE_CY = 150, ENGINE_R = 16, ENGINE_L = 62, PISTON_W = 26, PISTON_H = 28;
+let engineFrameId = null;
+
+function buildEngineSvg(){
+  const tubes = document.getElementById('cylTubes');
+  const webs = document.getElementById('webs');
+  const rods = document.getElementById('rods');
+  const pins = document.getElementById('pins');
+  const journals = document.getElementById('journals');
+  const pistons = document.getElementById('pistons');
+  const ns = 'http://www.w3.org/2000/svg';
+  ENGINE_CX.forEach((cx,i)=>{
+    const tube = document.createElementNS(ns,'rect');
+    tube.setAttribute('x', cx-17); tube.setAttribute('y', 22); tube.setAttribute('width', 34); tube.setAttribute('height', 92);
+    tube.setAttribute('rx', 3); tube.setAttribute('fill','none'); tube.setAttribute('stroke','var(--ink)'); tube.setAttribute('stroke-width','1.5');
+    tubes.appendChild(tube);
+
+    const journal = document.createElementNS(ns,'circle');
+    journal.setAttribute('cx', cx); journal.setAttribute('cy', ENGINE_CY); journal.setAttribute('r', 3); journal.setAttribute('fill','var(--ink)');
+    journals.appendChild(journal);
+
+    const web = document.createElementNS(ns,'line');
+    web.id = 'web'+i; web.setAttribute('stroke','var(--yellow-deep)'); web.setAttribute('stroke-width','7'); web.setAttribute('stroke-linecap','round');
+    webs.appendChild(web);
+
+    const rod = document.createElementNS(ns,'line');
+    rod.id = 'rod'+i; rod.setAttribute('stroke','var(--ink)'); rod.setAttribute('stroke-width','3.5'); rod.setAttribute('stroke-linecap','round');
+    rods.appendChild(rod);
+
+    const pin = document.createElementNS(ns,'circle');
+    pin.id = 'pin'+i; pin.setAttribute('r', 4); pin.setAttribute('fill','var(--ink)');
+    pins.appendChild(pin);
+
+    const piston = document.createElementNS(ns,'rect');
+    piston.id = 'piston'+i; piston.setAttribute('width', PISTON_W); piston.setAttribute('height', PISTON_H);
+    piston.setAttribute('rx', 2.5); piston.setAttribute('fill','var(--yellow-deep)'); piston.setAttribute('stroke','var(--ink)'); piston.setAttribute('stroke-width','1.5');
+    pistons.appendChild(piston);
+  });
+}
+
+function stepEngine(ts){
+  const t = ts/1000;
+  const omega = (2*Math.PI)/0.85; // one crank revolution per 0.85s
+  ENGINE_CX.forEach((cx,i)=>{
+    const theta = omega*t + ENGINE_PHASE[i];
+    const pinX = cx + ENGINE_R*Math.sin(theta);
+    const pinY = ENGINE_CY - ENGINE_R*Math.cos(theta);
+    const dx = pinX - cx;
+    const pistonY = pinY - Math.sqrt(Math.max(ENGINE_L*ENGINE_L - dx*dx, 0));
+
+    document.getElementById('piston'+i).setAttribute('x', cx - PISTON_W/2);
+    document.getElementById('piston'+i).setAttribute('y', pistonY - PISTON_H/2);
+    document.getElementById('rod'+i).setAttribute('x1', pinX); document.getElementById('rod'+i).setAttribute('y1', pinY);
+    document.getElementById('rod'+i).setAttribute('x2', cx); document.getElementById('rod'+i).setAttribute('y2', pistonY);
+    document.getElementById('pin'+i).setAttribute('cx', pinX); document.getElementById('pin'+i).setAttribute('cy', pinY);
+    document.getElementById('web'+i).setAttribute('x1', cx); document.getElementById('web'+i).setAttribute('y1', ENGINE_CY);
+    document.getElementById('web'+i).setAttribute('x2', pinX); document.getElementById('web'+i).setAttribute('y2', pinY);
+  });
+  engineFrameId = requestAnimationFrame(stepEngine);
+}
+
 function initSplash(){
+  buildEngineSvg();
+  engineFrameId = requestAnimationFrame(stepEngine);
   const factEl = document.getElementById('splash-fact');
   const fact = FACTS[Math.floor(Math.random()*FACTS.length)];
   factEl.textContent = fact.text;
-  const dismiss = ()=>document.getElementById('splash').classList.add('hide');
-  const t = setTimeout(dismiss, 2200);
+  const dismiss = ()=>{
+    document.getElementById('splash').classList.add('hide');
+    if(engineFrameId) cancelAnimationFrame(engineFrameId);
+  };
+  const t = setTimeout(dismiss, 2400);
   document.getElementById('splash-skip').addEventListener('click', ()=>{clearTimeout(t); dismiss();});
 }
 
