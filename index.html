@@ -6,6 +6,7 @@
 <title>Vahanpedia — every generation, side by side</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
 <style>
   :root{
     --bg:#F1F0E9;
@@ -49,17 +50,23 @@
     transition:opacity .5s ease, visibility .5s ease;
   }
   #splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
-  .odo{display:flex;gap:4px;margin-bottom:14px;}
-  .odo-digit{
-    width:34px;height:48px;
-    background:var(--surface);
-    border:1.5px solid var(--ink);
-    border-radius:3px;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Space Grotesk';font-size:26px;font-weight:600;
-    color:var(--ink);
+  .engine-rig{display:flex;flex-direction:column;align-items:center;margin-bottom:18px;}
+  .cylinder-bank{display:flex;gap:10px;background:var(--ink);padding:8px 10px 0;border-radius:6px 6px 0 0;}
+  .cylinder{
+    width:28px;height:72px;background:var(--surface);border-radius:3px 3px 0 0;
+    position:relative;overflow:hidden;
   }
-  .odo-digit:last-child{color:var(--yellow-deep);}
+  .piston{
+    position:absolute;left:3px;width:22px;height:24px;background:var(--yellow-deep);
+    border-radius:2px;top:2px;
+    animation:pistonMove 0.7s cubic-bezier(.45,0,.55,1) infinite;
+  }
+  .piston::after{content:'';position:absolute;left:50%;top:100%;width:2px;height:14px;background:var(--ink-faint);transform:translateX(-50%);}
+  .piston.offset{animation-delay:0.35s;}
+  @keyframes pistonMove{
+    0%{top:2px;} 50%{top:44px;} 100%{top:2px;}
+  }
+  .crankcase{width:100%;height:14px;background:var(--ink);border-radius:0 0 6px 6px;}
   #splash .caption{font-size:12px;color:var(--ink-faint);margin-bottom:24px;}
   #splash-fact{max-width:420px;font-size:16px;line-height:1.6;color:var(--ink);min-height:78px;}
   #splash-skip{
@@ -117,7 +124,9 @@
   .plate.used .stripe{background:var(--green);}
   .plate.classic .stripe{background:var(--rust);}
   .plate-text{font-size:11.5px;font-weight:600;color:var(--ink-soft);}
-  .silhouette{width:100%;height:60px;display:flex;align-items:center;justify-content:center;}
+  .silhouette{width:100%;height:60px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--bg),#EAE8DF);border-radius:3px;margin:0 -14px;width:calc(100% + 28px);padding:4px 10px;}
+  .card{transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;}
+  .card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(27,28,23,0.10);}
   .silhouette svg{width:100%;height:100%;}
   .card-name{font-size:17px;line-height:1.2;}
   .card-gen{font-size:12px;color:var(--ink-faint);}
@@ -178,6 +187,10 @@
   .spec-table td:first-child{color:var(--ink-faint);width:40%;}
   .spec-table td:last-child{color:var(--ink);font-weight:500;}
   .section-label{font-size:13px;font-weight:600;color:var(--ink);margin:20px 0 8px;}
+  .key-stats{display:flex;gap:10px;margin-top:14px;}
+  .key-stat{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:10px 12px;}
+  .key-stat-label{font-size:11px;color:var(--ink-faint);margin-bottom:3px;}
+  .key-stat-value{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.35;}
   .paint-row{display:flex;gap:10px;flex-wrap:wrap;}
   .paint-chip{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:var(--ink-soft);width:66px;}
   .paint-swatch{width:44px;height:30px;border-radius:3px;border:1px solid var(--line-strong);}
@@ -211,13 +224,53 @@
     #controls{padding:16px 16px 4px;}
     #grid{padding:18px 16px 100px;}
   }
+
+  /* ---------- Tabs / bottom nav ---------- */
+  body{padding-bottom:64px;}
+  .view{display:block;}
+  .home-block{padding:22px 20px 4px;}
+  .topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+  .topic-card{
+    background:var(--surface);border:1.5px solid var(--line);border-radius:3px;
+    padding:16px;cursor:pointer;transition:border-color .15s ease, transform .15s ease;
+  }
+  .topic-card:hover{border-color:var(--ink);transform:translateY(-2px);}
+  .topic-title{font-family:'Space Grotesk';font-weight:600;font-size:14.5px;margin-bottom:6px;}
+  .topic-body{font-size:12.5px;color:var(--ink-soft);line-height:1.5;}
+  .placeholder-view{
+    max-width:420px;margin:60px auto;text-align:center;padding:0 20px;
+  }
+  .placeholder-icon{font-size:40px;margin-bottom:14px;}
+  .placeholder-view h2{margin:0 0 10px;font-size:20px;}
+  .placeholder-view p{color:var(--ink-soft);font-size:13.5px;line-height:1.6;}
+  #bottomNav{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:var(--surface);border-top:1.5px solid var(--ink);
+    display:flex;padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .navbtn{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:8px 4px 9px;background:none;border:none;color:var(--ink-faint);font-size:10px;font-family:'Inter';
+  }
+  .navbtn .navicon{font-size:19px;line-height:1;}
+  .navbtn.active{color:var(--ink);font-weight:700;}
+  #compareBar{bottom:58px;}
+  #compareBar.show{transform:translateY(0);}
 </style>
 </head>
 <body>
 
 <div id="splash">
-  <div class="odo" id="odoDigits"></div>
-  <div class="caption">The count is loading</div>
+  <div class="engine-rig">
+    <div class="cylinder-bank">
+      <div class="cylinder"><div class="piston"></div></div>
+      <div class="cylinder"><div class="piston offset"></div></div>
+      <div class="cylinder"><div class="piston offset"></div></div>
+      <div class="cylinder"><div class="piston"></div></div>
+    </div>
+    <div class="crankcase"></div>
+  </div>
+  <div class="caption">Firing up the archive</div>
   <div id="splash-fact"></div>
   <button id="splash-skip">Skip</button>
 </div>
@@ -230,24 +283,85 @@
   <div class="range-readout">Coverage: <b>2000–2026</b> · India</div>
 </header>
 
-<section id="trendingWrap">
-  <div class="trending-label">Trending now · India</div>
-  <div id="trendingScroll" class="trending-scroll"></div>
-</section>
+<main id="viewport">
 
-<section id="controls">
-  <input id="search" type="text" placeholder="Search a model — try 'Safari', 'Alto', 'Corona'…">
-  <div class="pillrow" id="categoryPills"></div>
-  <div class="pillrow" id="statusPills"></div>
-  <div class="pillrow" id="budgetPills"></div>
-</section>
+  <section id="view-home" class="view">
+    <section id="trendingWrap">
+      <div class="trending-label">Trending now · India</div>
+      <div id="trendingScroll" class="trending-scroll"></div>
+    </section>
 
-<section id="grid"></section>
+    <section class="home-block">
+      <div class="trending-label">Topics worth exploring</div>
+      <div class="topics-grid">
+        <div class="topic-card" onclick="switchTab('cars')">
+          <div class="topic-title">Old vs. new: same budget, different eras</div>
+          <div class="topic-body">A used Safari Storme costs about what a new entry hatchback does. See what that trade-off actually looks like spec by spec.</div>
+        </div>
+        <div class="topic-card" onclick="switchTab('cars')">
+          <div class="topic-title">The 15-year-old used market</div>
+          <div class="topic-body">Sedans and SUVs from the 2010s are aging into genuine bargains — but parts and service networks vary a lot by model.</div>
+        </div>
+        <div class="topic-card" onclick="switchTab('cars')">
+          <div class="topic-title">Cross-shopping a sedan against an SUV</div>
+          <div class="topic-body">Our comparison tool doesn't restrict by body type — stack a sedan against an SUV directly if that's genuinely your choice.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-block">
+      <button class="btn primary" style="width:100%;max-width:360px;padding:14px;" onclick="switchTab('cars')">Browse the full archive →</button>
+    </section>
+  </section>
+
+  <section id="view-cars" class="view" style="display:none;">
+    <section id="controls">
+      <input id="search" type="text" placeholder="Search a model — try 'Safari', 'Alto', 'Corona'…">
+      <div class="pillrow" id="categoryPills"></div>
+      <div class="pillrow" id="statusPills"></div>
+      <div class="pillrow" id="budgetPills"></div>
+    </section>
+    <section id="grid"></section>
+  </section>
+
+  <section id="view-news" class="view" style="display:none;">
+    <div class="placeholder-view">
+      <div class="placeholder-icon">📰</div>
+      <h2>News &amp; updates</h2>
+      <p>Automotive industry news, launch coverage, and policy updates for the Indian market — coming soon to this tab.</p>
+    </div>
+  </section>
+
+  <section id="view-bikes" class="view" style="display:none;">
+    <div class="placeholder-view">
+      <div class="placeholder-icon">🏍️</div>
+      <h2>Bikes</h2>
+      <p>A two-wheeler archive, built the same way as the car database — profiles, specs, and generation comparisons. Coming soon.</p>
+    </div>
+  </section>
+
+  <section id="view-used" class="view" style="display:none;">
+    <div class="placeholder-view">
+      <div class="placeholder-icon">🔑</div>
+      <h2>Used car listings</h2>
+      <p>This will eventually be a real classifieds section — individual sellers listing their actual car. It's separate from the "Used market" tag in the Cars tab, which just notes that a model is typically bought secondhand. Coming soon.</p>
+    </div>
+  </section>
+
+</main>
 
 <div id="compareBar">
   <div class="chips" id="compareChips"></div>
   <button class="go" id="compareGoBtn">Compare</button>
 </div>
+
+<nav id="bottomNav">
+  <button class="navbtn active" data-tab="home" onclick="switchTab('home')"><span class="navicon">🏠</span>Home</button>
+  <button class="navbtn" data-tab="cars" onclick="switchTab('cars')"><span class="navicon">🚗</span>Cars</button>
+  <button class="navbtn" data-tab="news" onclick="switchTab('news')"><span class="navicon">📰</span>News</button>
+  <button class="navbtn" data-tab="bikes" onclick="switchTab('bikes')"><span class="navicon">🏍️</span>Bikes</button>
+  <button class="navbtn" data-tab="used" onclick="switchTab('used')"><span class="navicon">🔑</span>Used</button>
+</nav>
 
 <div class="modal-overlay" id="profileOverlay">
   <div class="modal" id="profileModal"></div>
@@ -453,7 +567,43 @@ const CARS = [
   { id:'scorpion', make:'Mahindra', model:'Scorpio-N', generation:'Current generation', years:'2022–present', category:'suv', status:'current', segment:'15–20L', verified:true, trending:true,
     priceLabel:'New (ex-showroom): ₹13.69L–25.49L', engine:'1997cc turbo-petrol / 2198cc mHawk turbo-diesel', power:'200 bhp (petrol) / 130–172 bhp (diesel)', mileage:'12.1–15.9 km/l (ARAI claimed)', transmission:'6MT / 6AT · 4x4 on higher diesel variants', seating:'6/7',
     paints:[{name:'Diamond White',hex:'#E7E4D8'},{name:'Stealth Black',hex:'#1C1C1C'},{name:'Everest White',hex:'#EDEDE6'}],
-    facts:['Offered in both 6-seat captain-chair and 7-seat bench layouts depending on variant.','The only vehicle in its segment offering a 4x4 drivetrain, available on the higher-output diesel variants.'] }
+    facts:['Offered in both 6-seat captain-chair and 7-seat bench layouts depending on variant.','The only vehicle in its segment offering a 4x4 drivetrain, available on the higher-output diesel variants.'] },
+  { id:'baleno', make:'Maruti Suzuki', model:'Baleno', generation:'Facelift (2026)', years:'2022–present', category:'hatchback', status:'current', segment:'5–10L', verified:true,
+    priceLabel:'New (ex-showroom): ₹6.10L–10.09L', engine:'1197cc, 3-cyl petrol', power:'82 bhp / 112 Nm', mileage:'23.8 km/l (claimed), up to 33.61 km/kg CNG', transmission:'5MT / AMT', seating:'5',
+    paints:[{name:'Splendid Silver',hex:'#B9BEC2'},{name:'Nexa Blue',hex:'#254A73'},{name:'Grandeur Grey',hex:'#54595E'}],
+    facts:['This 2026 facelift dropped the older four-cylinder K-series engine for the newer three-cylinder Z12E unit shared with the Swift and Dzire.','Also offered with a CNG option that trades some power for lower running costs.'] },
+  { id:'brezza', make:'Maruti Suzuki', model:'Brezza', generation:'Facelift (2026)', years:'2016–present', category:'suv', status:'current', segment:'10–15L', verified:true,
+    priceLabel:'New (ex-showroom): ₹7.40L–13.71L', engine:'1462cc petrol / 998cc turbo-petrol (Boosterjet) options', power:'103 bhp (NA petrol) / 109 bhp (turbo) / 170 Nm (turbo)', mileage:'19.8–26.9 km/l (claimed, incl. CNG)', transmission:'5MT / 6MT / 6AT', seating:'5',
+    paints:[{name:'Vivacious Orange',hex:'#C96A2E'},{name:'Splendid Silver',hex:'#B9BEC2'},{name:'Bluish Black',hex:'#1C1C1C'}],
+    facts:['This 2026 facelift added a 1.0-litre Boosterjet turbo-petrol engine with a 48-volt mild hybrid system — Maruti\'s first turbo engine on this model.','Scored five stars in Bharat NCAP crash safety testing.'] },
+  { id:'i20', make:'Hyundai', model:'i20', generation:'Facelift', years:'2020–present', category:'hatchback', status:'current', segment:'5–10L', verified:true,
+    priceLabel:'New (ex-showroom): ₹7.04L–11.25L', engine:'1197cc, 4-cyl petrol', power:'82–87 bhp / 114.7 Nm', mileage:'16–20 km/l (ARAI claimed)', transmission:'5MT / IVT', seating:'5',
+    paints:[{name:'Titan Grey',hex:'#54595E'},{name:'Atlas White',hex:'#E7E4D8'},{name:'Fiery Red',hex:'#9C2B22'}],
+    facts:['Still runs on the same platform generation it has used for years, even as some rivals move to newer architectures.','Available only with petrol engines — Hyundai dropped the diesel option from this generation.'] },
+  { id:'venue', make:'Hyundai', model:'Venue', generation:'Facelift', years:'2019–present', category:'suv', status:'current', segment:'10–15L', verified:true,
+    priceLabel:'New (ex-showroom): ₹8.00L–15.65L', engine:'1197cc petrol / 998cc turbo-petrol / 1493cc diesel options', power:'82–120 bhp', mileage:'18.5–20.5 km/l (claimed)', transmission:'5MT / 6iMT / 7-speed DCT', seating:'5',
+    paints:[{name:'Atlas White',hex:'#E7E4D8'},{name:'Titan Grey',hex:'#54595E'},{name:'Fiery Red',hex:'#9C2B22'}],
+    facts:['Offers a wider engine spread than most rivals — naturally aspirated and turbo-petrol plus diesel, across manual, iMT and dual-clutch automatic gearboxes.','One of the few sub-4-metre SUVs in India still offering a diesel option.'] },
+  { id:'altroz', make:'Tata', model:'Altroz', generation:'Facelift (2025)', years:'2020–present', category:'hatchback', status:'current', segment:'5–10L', verified:true,
+    priceLabel:'New (ex-showroom): ₹6.00L–10.90L', engine:'1199cc petrol / 1497cc diesel options, factory CNG available', power:'88 bhp (petrol) / 90 bhp (diesel) / 74 bhp (CNG)', mileage:'18.5–23.64 km/l (ARAI claimed, petrol/diesel) · 26.2 km/kg (CNG)', transmission:'5MT / 6-speed DCT', seating:'5',
+    paints:[{name:'Sunlit Yellow',hex:'#E7B93A'},{name:'Arctic White',hex:'#E7E4D8'},{name:'Oberon Black',hex:'#1C1C1C'}],
+    facts:['The 2025 facelift kept the familiar petrol and diesel engines but added a factory CNG version with an unusually large usable boot for a CNG car.','Has the largest boot in its class at 345 litres.'] },
+  { id:'harrier', make:'Tata', model:'Harrier', generation:'Facelift (2023)', years:'2023–present', category:'suv', status:'current', segment:'15–20L', verified:true,
+    priceLabel:'New (ex-showroom): ₹14.00L–26.05L', engine:'1956cc diesel / 1497cc turbo-petrol options', power:'up to 168 bhp (diesel) / 125 bhp (petrol)', mileage:'16.8 km/l (ARAI claimed, diesel)', transmission:'6MT / 6AT', seating:'5',
+    paints:[{name:'Lunar White',hex:'#E7E4D8'},{name:'Seaweed Green',hex:'#3B5D42'},{name:'Sunlit Yellow',hex:'#E7B93A'}],
+    facts:['Shares its 2.0-litre diesel with the MG Hector, and gained a turbo-petrol engine option in a January 2026 update.','Holds a 5-star Global NCAP safety rating.'] },
+  { id:'xuv700', make:'Mahindra', model:'XUV 7XO (XUV700)', generation:'Facelift (2026)', years:'2021–present', category:'suv', status:'current', segment:'15–20L', verified:true,
+    priceLabel:'New (ex-showroom): ₹13.66L–26.18L', engine:'1997cc turbo-petrol / 2184cc diesel options', power:'200 bhp (petrol) / 155–185 bhp (diesel)', mileage:'13–16 km/l (claimed)', transmission:'6MT / 6AT · AWD on top diesel automatic', seating:'5/7',
+    paints:[{name:'Midnight Black',hex:'#1C1C1C'},{name:'Everest White',hex:'#EDEDE6'},{name:'Burnt Sienna',hex:'#9C5A34'}],
+    facts:['Renamed XUV 7XO in a January 2026 update, keeping the same underlying mechanicals as the XUV700 it replaces.','One of the few mainstream SUVs in its class offering an all-wheel-drive diesel automatic variant.'] },
+  { id:'carens', make:'Kia', model:'Carens', generation:'Facelift, reduced lineup', years:'2022–present', category:'mpv', status:'current', segment:'10–15L', verified:true,
+    priceLabel:'New (ex-showroom): ₹11.12L–12.98L', engine:'1497cc petrol / 1497cc diesel options', power:'up to 114 bhp', mileage:'10–21 km/l (ARAI claimed, across trims)', transmission:'6MT', seating:'7',
+    paints:[{name:'Aurora Black Pearl',hex:'#1C1C1C'},{name:'Glacier White Pearl',hex:'#E7E4D8'},{name:'Intense Red',hex:'#9C2B22'}],
+    facts:['Kia trimmed the Carens lineup down to just two variants as the newer Carens Clavis took over as the brand\'s main three-row MPV push.','Seats seven with usable third-row space, competing directly with the Maruti Ertiga and Toyota Rumion.'] },
+  { id:'elevate', make:'Honda', model:'Elevate', generation:'Current generation', years:'2023–present', category:'suv', status:'current', segment:'10–15L', verified:true,
+    priceLabel:'New (ex-showroom): ₹11.60L–16.93L', engine:'1498cc petrol', power:'119 bhp / 145 Nm', mileage:'15.31 km/l (claimed)', transmission:'6MT / CVT', seating:'5',
+    paints:[{name:'Platinum White Pearl',hex:'#E7E4D8'},{name:'Meteoroid Grey',hex:'#54595E'},{name:'Obsidian Blue Pearl',hex:'#2C4A6B'}],
+    facts:['Honda\'s first dedicated compact SUV for the Indian market, built on a shortened City platform.','Offered only with a petrol engine — no diesel or hybrid option as of 2026.'] }
 ];
 
 const FACTS = [
@@ -479,46 +629,63 @@ const STATUS_LABEL = {current:'Current',used:'Used market',classic:'Classic'};
 let state = { search:'', category:'All', status:'All status', budget:'Any budget', compare:[] };
 
 /* ================= SILHOUETTES (line diagrams) ================= */
-function silhouette(category){
-  const common = `stroke="var(--ink-faint)" stroke-width="2" fill="none" vector-effect="non-scaling-stroke"`;
+function silhouette(category, fillHex){
+  const fill = fillHex || '#C4C0AE';
+  const body = `fill="${fill}" fill-opacity="0.92" stroke="var(--ink)" stroke-width="2" vector-effect="non-scaling-stroke"`;
+  const glass = `fill="var(--ink)" fill-opacity="0.16" stroke="none"`;
+  const pillar = `stroke="var(--ink)" stroke-width="1.5" vector-effect="non-scaling-stroke" fill="none"`;
+  const wheel = `fill="var(--ink)"`;
+  const hub = `fill="var(--surface)"`;
+  const shadow = `fill="var(--ink)" fill-opacity="0.10"`;
+
   if(category==='hatchback'){
-    return `<svg viewBox="0 0 200 80"><path ${common} d="M20 58 L28 40 Q40 26 62 26 L118 26 Q136 26 146 40 L168 58" />
-      <line ${common} x1="20" y1="58" x2="168" y2="58"/>
-      <line ${common} x1="60" y1="28" x2="70" y2="58" stroke-dasharray="2 3"/>
-      <line ${common} x1="118" y1="28" x2="128" y2="58" stroke-dasharray="2 3"/>
-      <circle ${common} cx="52" cy="60" r="10"/><circle ${common} cx="146" cy="60" r="10"/></svg>`;
+    return `<svg viewBox="0 0 200 90">
+      <ellipse ${shadow} cx="94" cy="75" rx="78" ry="6"/>
+      <path ${body} d="M20 58 L28 40 Q40 26 62 26 L118 26 Q136 26 146 40 L168 58 Z"/>
+      <path ${glass} d="M63 28 L117 28 L125 56 L65 56 Z"/>
+      <line ${pillar} x1="93" y1="27" x2="93" y2="57"/>
+      <circle ${wheel} cx="52" cy="60" r="10"/><circle ${hub} cx="52" cy="60" r="4"/>
+      <circle ${wheel} cx="146" cy="60" r="10"/><circle ${hub} cx="146" cy="60" r="4"/>
+    </svg>`;
   }
   if(category==='sedan'){
-    return `<svg viewBox="0 0 200 80"><path ${common} d="M14 58 L24 42 Q36 26 56 26 L112 26 Q128 26 138 38 L152 42 L182 50 L182 58" />
-      <line ${common} x1="14" y1="58" x2="182" y2="58"/>
-      <line ${common} x1="54" y1="28" x2="62" y2="58" stroke-dasharray="2 3"/>
-      <line ${common} x1="112" y1="28" x2="120" y2="58" stroke-dasharray="2 3"/>
-      <circle ${common} cx="48" cy="60" r="10"/><circle ${common} cx="152" cy="60" r="10"/></svg>`;
+    return `<svg viewBox="0 0 200 90">
+      <ellipse ${shadow} cx="98" cy="75" rx="92" ry="6"/>
+      <path ${body} d="M14 58 L24 42 Q36 26 56 26 L112 26 Q128 26 138 38 L152 42 L182 50 L182 58 Z"/>
+      <path ${glass} d="M58 28 L136 28 L144 54 L66 54 Z"/>
+      <line ${pillar} x1="110" y1="27" x2="112" y2="54"/>
+      <circle ${wheel} cx="48" cy="60" r="10"/><circle ${hub} cx="48" cy="60" r="4"/>
+      <circle ${wheel} cx="152" cy="60" r="10"/><circle ${hub} cx="152" cy="60" r="4"/>
+    </svg>`;
   }
   if(category==='suv'){
-    return `<svg viewBox="0 0 200 80"><path ${common} d="M16 60 L22 34 Q30 20 50 20 L138 20 Q156 20 164 34 L178 60" />
-      <line ${common} x1="16" y1="60" x2="178" y2="60"/>
-      <line ${common} x1="50" y1="22" x2="56" y2="60" stroke-dasharray="2 3"/>
-      <line ${common} x1="94" y1="20" x2="98" y2="60" stroke-dasharray="2 3"/>
-      <line ${common} x1="138" y1="22" x2="140" y2="60" stroke-dasharray="2 3"/>
-      <circle ${common} cx="52" cy="62" r="11"/><circle ${common} cx="152" cy="62" r="11"/></svg>`;
+    return `<svg viewBox="0 0 200 90">
+      <ellipse ${shadow} cx="97" cy="77" rx="86" ry="6"/>
+      <path ${body} d="M16 60 L22 34 Q30 20 50 20 L138 20 Q156 20 164 34 L178 60 Z"/>
+      <path ${glass} d="M52 22 L162 22 L170 56 L60 56 Z"/>
+      <line ${pillar} x1="94" y1="20" x2="96" y2="56"/>
+      <line ${pillar} x1="138" y1="21" x2="139" y2="56"/>
+      <circle ${wheel} cx="52" cy="62" r="11"/><circle ${hub} cx="52" cy="62" r="4.5"/>
+      <circle ${wheel} cx="152" cy="62" r="11"/><circle ${hub} cx="152" cy="62" r="4.5"/>
+    </svg>`;
   }
-  return `<svg viewBox="0 0 200 80"><path ${common} d="M18 60 L20 32 Q24 18 44 18 L150 18 Q168 18 172 32 L176 60" />
-    <line ${common} x1="18" y1="60" x2="176" y2="60"/>
-    <line ${common} x1="52" y1="20" x2="56" y2="60" stroke-dasharray="2 3"/>
-    <line ${common} x1="96" y1="18" x2="98" y2="60" stroke-dasharray="2 3"/>
-    <line ${common} x1="140" y1="20" x2="142" y2="60" stroke-dasharray="2 3"/>
-    <circle ${common} cx="52" cy="62" r="11"/><circle ${common} cx="146" cy="62" r="11"/></svg>`;
+  return `<svg viewBox="0 0 200 90">
+    <ellipse ${shadow} cx="97" cy="77" rx="84" ry="6"/>
+    <path ${body} d="M18 60 L20 32 Q24 18 44 18 L150 18 Q168 18 172 32 L176 60 Z"/>
+    <path ${glass} d="M46 20 L148 20 L174 56 L20 56 Z"/>
+    <line ${pillar} x1="52" y1="19" x2="56" y2="56"/>
+    <line ${pillar} x1="96" y1="18" x2="98" y2="56"/>
+    <line ${pillar} x1="140" y1="19" x2="142" y2="56"/>
+    <circle ${wheel} cx="52" cy="62" r="11"/><circle ${hub} cx="52" cy="62" r="4.5"/>
+    <circle ${wheel} cx="146" cy="62" r="11"/><circle ${hub} cx="146" cy="62" r="4.5"/>
+  </svg>`;
 }
 
 /* ================= SPLASH ================= */
 function initSplash(){
-  const digitsEl = document.getElementById('odoDigits');
   const factEl = document.getElementById('splash-fact');
   const fact = FACTS[Math.floor(Math.random()*FACTS.length)];
   factEl.textContent = fact.text;
-  const digits = String(Math.floor(Math.random()*999999)).padStart(6,'0').split('');
-  digitsEl.innerHTML = digits.map(d=>`<div class="odo-digit">${d}</div>`).join('');
   const dismiss = ()=>document.getElementById('splash').classList.add('hide');
   const t = setTimeout(dismiss, 2200);
   document.getElementById('splash-skip').addEventListener('click', ()=>{clearTimeout(t); dismiss();});
@@ -552,7 +719,7 @@ function renderTrending(){
   if(list.length===0){ wrap.style.display='none'; return; }
   scroll.innerHTML = list.map(car=>`
     <div class="trend-card" onclick="openProfile('${car.id}')">
-      <div class="silhouette">${silhouette(car.category)}</div>
+      <div class="silhouette">${silhouette(car.category, car.paints[0].hex)}</div>
       <div class="t-name">${car.make} ${car.model}</div>
       <div class="t-sub">${car.generation}</div>
     </div>
@@ -579,7 +746,7 @@ function renderGrid(){
   grid.innerHTML = list.map(car=>`
     <div class="card">
       <div class="plate ${car.status}"><div class="stripe"></div><div class="plate-text">${STATUS_LABEL[car.status]}</div></div>
-      <div class="silhouette">${silhouette(car.category)}</div>
+      <div class="silhouette">${silhouette(car.category, car.paints[0].hex)}</div>
       <div class="card-name">${car.make} ${car.model}</div>
       <div class="card-gen">${car.generation}</div>
       <div class="tagrow"><span class="tag">${car.years}</span><span class="tag">${car.category}</span><span class="tag">${car.segment}</span></div>
@@ -600,22 +767,25 @@ function openProfile(id){
   const modal = document.getElementById('profileModal');
   modal.innerHTML = `
     <button class="modal-close" onclick="closeOverlay('profileOverlay')">×</button>
-    <div class="silhouette" style="height:80px;margin-bottom:10px;">${silhouette(car.category)}</div>
+    <div class="silhouette" style="height:130px;margin-bottom:10px;">${silhouette(car.category, car.paints[0].hex)}</div>
     <h2>${car.make} ${car.model}</h2>
     <div class="sub"><span class="tag">${car.generation}</span><span class="tag">${car.years}</span><span class="tag">${STATUS_LABEL[car.status]}</span><span class="tag ${car.verified?'verified':'unverified'}">${car.verified?'Verified specs':'Placeholder data'}</span></div>
-    <table class="spec-table">
-      <tr><td>Price</td><td>${car.priceLabel}</td></tr>
-      <tr><td>Engine</td><td>${car.engine}</td></tr>
-      <tr><td>Power</td><td>${car.power}</td></tr>
-      <tr><td>Mileage</td><td>${car.mileage}</td></tr>
-      <tr><td>Transmission</td><td>${car.transmission}</td></tr>
-      <tr><td>Seating</td><td>${car.seating}</td></tr>
-      <tr><td>Budget bracket</td><td>${car.segment}</td></tr>
-    </table>
+    <div class="key-stats">
+      <div class="key-stat"><div class="key-stat-label">Price</div><div class="key-stat-value">${car.priceLabel}</div></div>
+      <div class="key-stat"><div class="key-stat-label">Seating</div><div class="key-stat-value">${car.seating}</div></div>
+    </div>
     <div class="section-label">Paint options</div>
     <div class="paint-row">
       ${car.paints.map(p=>`<div class="paint-chip"><div class="paint-swatch" style="background:${p.hex}"></div>${p.name}</div>`).join('')}
     </div>
+    <div class="section-label">Full specs</div>
+    <table class="spec-table">
+      <tr><td>Engine</td><td>${car.engine}</td></tr>
+      <tr><td>Power</td><td>${car.power}</td></tr>
+      <tr><td>Mileage</td><td>${car.mileage}</td></tr>
+      <tr><td>Transmission</td><td>${car.transmission}</td></tr>
+      <tr><td>Budget bracket</td><td>${car.segment}</td></tr>
+    </table>
     <div class="section-label">Worth knowing</div>
     <ul class="facts-list">${car.facts.map(f=>`<li>${f}</li>`).join('')}</ul>
     <button class="btn primary" style="margin-top:18px;width:100%;" onclick="toggleCompare('${car.id}'); openProfile('${car.id}')">
@@ -689,6 +859,14 @@ function renderCompare(){
     </div>
     <button class="btn" style="margin-top:16px;" onclick="state.compare=[]; updateCompareBar(); renderGrid(); closeOverlay('compareOverlay');">Clear comparison</button>
   `;
+}
+
+/* ================= TABS ================= */
+function switchTab(tab){
+  document.querySelectorAll('.view').forEach(v=>v.style.display='none');
+  document.getElementById('view-'+tab).style.display='block';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  window.scrollTo({top:0, behavior:'instant'});
 }
 
 /* ================= INIT ================= */
